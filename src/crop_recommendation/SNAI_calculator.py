@@ -12,7 +12,7 @@ def calculate_snai(N, P, K, N_mean, P_mean, K_mean, N_std, P_std, K_std):
 
 # Main execution
 if __name__ == "__main__":
-    file_path = r"C:\Users\charishma\Desktop\Major Project\data.csv"  # Change this to your actual file path
+    file_path = r"data.csv"  # Change this to your actual file path
     df = load_data(file_path)
     
     # Compute mean and standard deviation for N, P, K
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     df_grouped = df[["N","P","K","temperature", "humidity", "ph", "rainfall", "soil_type", "label", "SNAI"]]
     
     # Save the processed DataFrame to a new CSV file
-    df_grouped.to_csv("snai_processed_data_1.csv", index=False)
+    df_grouped.to_csv("snai_data.csv", index=False)
     
     # Display results
     print(df_grouped)

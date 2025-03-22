@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the dataset from CSV
-file_path = r"C:\Users\charishma\Desktop\Major Project\utils\snai_processed_data_1.csv"  # Replace with your actual CSV file path
+file_path = r"snai_processed_data.csv"  # Replace with your actual CSV file path
 df = pd.read_csv(file_path)
 
 # Ensure "SNAI" column exists before processing

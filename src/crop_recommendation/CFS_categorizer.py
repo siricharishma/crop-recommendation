@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the dataset from CSV
-df = pd.read_csv(r"C:\Users\charishma\Desktop\Major Project\cfs_data.csv")  # Load the previously saved CFS data
+df = pd.read_csv(r"cfs_data.csv")  # Load the previously saved CFS data
 
 # Define categories for CFS
 def categorize_cfs(value):

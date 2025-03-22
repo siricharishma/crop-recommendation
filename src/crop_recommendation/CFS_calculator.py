@@ -16,7 +16,7 @@ def calculate_cfs(temp, humidity, rainfall, T_mean, H_mean, R_mean, T_std, H_std
 
 # Main execution
 if __name__ == "__main__":
-    file_path = r"C:\Users\charishma\Desktop\Major Project\data.csv"  # Change this to your actual file path
+    file_path = r"data.csv"  # Change this to your actual file path
     df = load_data(file_path)
     
     # Compute mean and standard deviation for temperature, humidity, and rainfall

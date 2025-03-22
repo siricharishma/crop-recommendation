@@ -6,8 +6,8 @@ from scipy.spatial.distance import mahalanobis
 
 # Load SNAI and CFS data from CSV files
 print("Loading data...")
-snai_df = pd.read_csv(r"C:\Users\charishma\Desktop\Major Project\utils\snai.csv")
-cfs_df = pd.read_csv(r"C:\Users\charishma\Desktop\Major Project\utils\cfs_data.csv")
+snai_df = pd.read_csv(r"snai_data.csv")
+cfs_df = pd.read_csv(r"cfs_data.csv")
 print("Data loaded successfully!")
 
 # Merge datasets on common columns like 'soil_type' and 'label'
@@ -28,7 +28,7 @@ merged_df["Weighted_Score"] = (w1 * merged_df["SNAI"]) + (w2 * merged_df["CFS"])
 print("Weighted Score calculated!")
 
 # Save the dataset with EWS (_2 suffix)
-merged_df.to_csv("weighted_score_data_nc2.csv", index=False)
+merged_df.to_csv("weighted_score_data.csv", index=False)
 print("Weighted score data saved!")
 
 # Features and target variable
