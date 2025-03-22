@@ -6,34 +6,35 @@ from scipy.spatial.distance import mahalanobis
 
 # Load SNAI and CFS data from CSV files
 print("Loading data...")
-snai_df = pd.read_csv(r"snai_data.csv")
-cfs_df = pd.read_csv(r"cfs_data.csv")
+# snai_df = pd.read_csv(r"snai_data.csv")
+# cfs_df = pd.read_csv(r"cfs_data.csv")
+cfs_snai_df = pd.read_csv(r"cfs_snai_data.csv")
 print("Data loaded successfully!")
 
 # Merge datasets on common columns like 'soil_type' and 'label'
-print("Merging datasets...")
-merged_df = pd.merge(snai_df, cfs_df, on=["soil_type", "label"], how="inner")
-print("Datasets merged successfully!")
+# print("Merging datasets...")
+# merged_df = pd.merge(snai_df, cfs_df, on=["soil_type", "label"], how="inner")
+# print("Datasets merged successfully!")
 
 # Compute exponential weights for dynamic weighting
 print("Calculating exponential weights...")
-sigma_snai = merged_df["SNAI"].std()
-sigma_cfs = merged_df["CFS"].std()
+sigma_snai = cfs_snai_df["SNAI"].std()
+sigma_cfs = cfs_snai_df["CFS"].std()
 w1 = np.exp(sigma_cfs) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
 w2 = np.exp(sigma_snai) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
 print(f"Exponential Weights - w1: {w1}, w2: {w2}")
 
 # Compute Exponential Weighted Score (EWS)
-merged_df["Weighted_Score"] = (w1 * merged_df["SNAI"]) + (w2 * merged_df["CFS"])
+cfs_snai_df["Weighted_Score"] = (w1 * cfs_snai_df["SNAI"]) + (w2 * cfs_snai_df["CFS"])
 print("Weighted Score calculated!")
 
 # Save the dataset with EWS (_2 suffix)
-merged_df.to_csv("weighted_score_data.csv", index=False)
+cfs_snai_df.to_csv("weighted_score_data.csv", index=False)
 print("Weighted score data saved!")
 
 # Features and target variable
-X = merged_df[["SNAI", "CFS", "Weighted_Score"]]
-y = merged_df["label"]
+X = cfs_snai_df[["SNAI", "CFS", "Weighted_Score"]]
+y = cfs_snai_df["label"]
 
 # Split the dataset
 print("Splitting data...")

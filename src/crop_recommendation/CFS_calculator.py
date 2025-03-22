@@ -16,7 +16,7 @@ def calculate_cfs(temp, humidity, rainfall, T_mean, H_mean, R_mean, T_std, H_std
 
 # Main execution
 if __name__ == "__main__":
-    file_path = r"data.csv"  # Change this to your actual file path
+    file_path = r"snai_data.csv"  # Change this to your actual file path
     df = load_data(file_path)
     
     # Compute mean and standard deviation for temperature, humidity, and rainfall
@@ -25,13 +25,10 @@ if __name__ == "__main__":
     
     # Apply function to calculate CFS
     df["CFS"] = df.apply(lambda row: calculate_cfs(row["temperature"], row["humidity"], row["rainfall"], T_mean, H_mean, R_mean, T_std, H_std, R_std), axis=1)
-    
-    # Drop only temperature, humidity, and rainfall columns
-    df_cfs = df.drop(columns=["temperature", "humidity", "rainfall"])
+
 
     # Save the CFS data into a separate CSV file
-    df_cfs.to_csv("cfs_data.csv", index=False)
-    
+    df.to_csv("cfs_snai_data.csv", index=False)
 
     # Display results
-    print(df_cfs)
+    print(df)

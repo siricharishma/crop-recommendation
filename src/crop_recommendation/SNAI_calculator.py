@@ -31,7 +31,7 @@ if __name__ == "__main__":
     df_grouped = df[["N","P","K","temperature", "humidity", "ph", "rainfall", "soil_type", "label", "SNAI"]]
     
     # Save the processed DataFrame to a new CSV file
-    df_grouped.to_csv("snai_data.csv", index=False)
+    df_grouped.to_csv("snai_data.csv")
     
     # Display results
     print(df_grouped)
