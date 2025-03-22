@@ -104,6 +104,12 @@ class ACSMModel:
         if save_path:
             if verbose:
                 print(f"Saving model to {save_path}...")
+            # Create directory if it doesn't exist
+            save_dir = os.path.dirname(save_path)
+            if save_dir and not os.path.exists(save_dir):
+                os.makedirs(save_dir, exist_ok=True)
+                if verbose:
+                    print(f"Created directory: {save_dir}")
             joblib.dump(self, save_path)
             if verbose:
                 print("Model saved successfully!")

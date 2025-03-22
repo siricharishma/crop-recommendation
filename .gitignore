@@ -9,5 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-# csvs
+# csvs and models
+model/
 *.csv
