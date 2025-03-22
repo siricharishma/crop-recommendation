@@ -15,7 +15,7 @@ def calculate_cfs(temp, humidity, rainfall, T_mean, H_mean, R_mean, T_std, H_std
     return round(max(0, cfs), 2)  # Ensure CFS is not negative
 
 # Main execution
-if __name__ == "__main__":
+def main():
     file_path = r"snai_data.csv"  # Change this to your actual file path
     df = load_data(file_path)
     
@@ -32,3 +32,6 @@ if __name__ == "__main__":
 
     # Display results
     print(df)
+
+if __name__ == "__main__":
+    main()

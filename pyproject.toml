@@ -18,6 +18,8 @@ dependencies = [
 ]
 
 [project.scripts]
+cr-cfs = "crop_recommendation.CFS_calculator:main"
+cr-snai = "crop_recommendation.SNAI_calculator:main"
 cr-train = "crop_recommendation.train:main"
 cr-predict = "crop_recommendation.predict:main"
 

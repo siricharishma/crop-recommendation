@@ -11,7 +11,7 @@ def calculate_snai(N, P, K, N_mean, P_mean, K_mean, N_std, P_std, K_std):
     return round(snai, 2)
 
 # Main execution
-if __name__ == "__main__":
+def main():
     file_path = r"data.csv"  # Change this to your actual file path
     df = load_data(file_path)
     
@@ -35,3 +35,6 @@ if __name__ == "__main__":
     
     # Display results
     print(df_grouped)
+
+if __name__ == "__main__":
+    main()
