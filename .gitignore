@@ -9,9 +9,5 @@ wheels/
 # Virtual environments
 .venv
 
-# Logs, data and reports
-logs/
-crawled_data/
-data/
-dataset/
-reports/
+# csvs
+*.csv
