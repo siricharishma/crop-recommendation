@@ -9,54 +9,12 @@ from sklearn.metrics import (accuracy_score, precision_score, recall_score,
                             f1_score, confusion_matrix, ConfusionMatrixDisplay)
 from scipy.spatial.distance import mahalanobis
 import os
+from crop_recommendation.dataset import prepare_data
 
 # Data loading and preparation functions
-def load_and_prepare_data():
-    # Check if weighted score data already exists
-    weighted_data_path = "weighted_score_data.csv"
-    if os.path.exists(weighted_data_path):
-        print(f"Found existing weighted data file: {weighted_data_path}")
-        print("Loading pre-computed weighted data...")
-        
-        # Load the pre-computed data
-        merged_df = pd.read_csv(weighted_data_path)
-        
-        # Calculate w1 and w2 from the data to maintain consistency
-        sigma_snai = merged_df["SNAI"].std()
-        sigma_cfs = merged_df["CFS"].std()
-        w1 = np.exp(sigma_cfs) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
-        w2 = np.exp(sigma_snai) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
-        
-        print(f"Loaded weighted data: {len(merged_df)} samples")
-        print(f"Using weights - w1: {w1:.4f}, w2: {w2:.4f}")
-    else:
-        print("No existing weighted data found. Processing raw data...")
-        # Original data loading and processing code
-        print("Loading data...")
-        merged_df = pd.read_csv(r"cfs_snai_data.csv")
-        print("Data loaded successfully!")
-
-        # Compute exponential weights
-        print("Calculating exponential weights...")
-        sigma_snai = merged_df["SNAI"].std()
-        sigma_cfs = merged_df["CFS"].std()
-        w1 = np.exp(sigma_cfs) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
-        w2 = np.exp(sigma_snai) / (np.exp(sigma_snai) + np.exp(sigma_cfs))
-        print(f"Exponential Weights - w1: {w1:.4f}, w2: {w2:.4f}")
-
-        # Compute Weighted Score
-        merged_df["Weighted_Score"] = (w1 * merged_df["SNAI"]) + (w2 * merged_df["CFS"])
-        print("Weighted Score calculated!")
-
-        # Save the dataset
-        merged_df.to_csv(weighted_data_path, index=False)
-        print(f"Weighted score data saved to {weighted_data_path}!")
-
-    # Features and target
-    X = merged_df[["SNAI", "CFS", "Weighted_Score"]]
-    y = merged_df["label"]
-    
-    return X, y, w1, w2
+def load_and_prepare_data(model_dir="model", raw_data_path="data.csv"):
+    """Load and prepare data using the dataset module"""
+    return prepare_data(model_dir, raw_data_path)
 
 # Custom ACSM model with Mahalanobis distance
 class ACSMModel:
@@ -67,14 +25,19 @@ class ACSMModel:
         self.features = ["SNAI", "CFS", "Weighted_Score"]
         self.w1 = None
         self.w2 = None
+        self.reference_stats = {}
 
-    def fit(self, X, y, w1=None, w2=None, save_path=None, verbose=True):
+    def fit(self, X, y, w1=None, w2=None, reference_stats=None, save_path=None, verbose=True):
         """Train the ACSM model with detailed progress information."""
         start_time = time.time()
         
         # Store weights for later predictions
         self.w1 = w1
         self.w2 = w2
+        
+        # Store reference statistics
+        if reference_stats:
+            self.reference_stats = reference_stats
         
         if verbose:
             print("\nTraining ACSM model...")
@@ -161,6 +124,10 @@ class ACSMModel:
             
         return predictions, distances
 
+    def get_reference_stats(self):
+        """Get the reference statistics stored in the model"""
+        return self.reference_stats
+
 # Evaluation functions
 def evaluate_model(y_true, y_pred, output_file=None):
     """Calculate and display performance metrics."""
@@ -237,7 +204,7 @@ def test_sample_prediction(model, sample_data, w1, w2):
 # Main execution function
 def main():
     # Load and prepare data
-    X, y, w1, w2 = load_and_prepare_data()
+    X, y, w1, w2, reference_stats = load_and_prepare_data()
     
     # Split the dataset
     print("\nSplitting data...")
@@ -247,7 +214,7 @@ def main():
     # Train and save model
     model_path = "acsm_model.joblib"
     acsm = ACSMModel()
-    acsm.fit(X_train, y_train, w1=w1, w2=w2, save_path=model_path)
+    acsm.fit(X_train, y_train, w1=w1, w2=w2, reference_stats=reference_stats, save_path=model_path)
     
     # Make predictions
     y_pred, _ = acsm.predict(X_test)
